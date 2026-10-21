@@ -1,5 +1,5 @@
 import { useState } from "react";
-import cover from "@/assets/cover.jpg.asset.json";
+const cover = { url: "/media/cover.jpg" };
 import { Petals } from "./shared";
 
 export function Cover({ onOpen }: { onOpen: () => void }) {
