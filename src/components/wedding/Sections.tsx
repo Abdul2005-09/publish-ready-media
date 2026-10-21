@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import venue from "@/assets/venue.jpg";
+const venue = "/media/venue.jpg";
 import { photos } from "./photos";
 import { Corner, Heading, Ornament, Petals, Reveal } from "./shared";
 
@@ -43,7 +43,7 @@ export function Venue() {
       </Reveal>
       <Reveal delay={150} className="relative mx-auto mt-6 max-w-5xl">
         <div className="rounded-xl border border-gold/60 bg-ivory p-2 shadow-paper">
-          <img src={venue} alt="Watercolor illustration of The Royal Mahal" loading="lazy" width={1536} height={864} className="w-full rounded-lg" />
+          <img src={venue} alt="Watercolor illustration of The Royal Mahal" loading="lazy" width={1600} height={831} className="w-full rounded-lg" />
         </div>
         <Corner pos="bl" />
       </Reveal>
