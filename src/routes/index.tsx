@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-// Wedding song: place the real file at public/media/music.mp3
-const music = { url: "/media/music.mp3" };
+// Wedding song: audio track extracted from the hero video
+const music = { url: "/media/wedding-music.mp3" };
 import { Cover } from "@/components/wedding/Cover";
 import { Hero } from "@/components/wedding/Hero";
 import { Dates } from "@/components/wedding/Dates";
