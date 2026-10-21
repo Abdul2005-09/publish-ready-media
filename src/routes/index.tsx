@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import music from "@/assets/music.mp3.asset.json";
+// Wedding song: place the real file at public/media/music.mp3
+const music = { url: "/media/music.mp3" };
 import { Cover } from "@/components/wedding/Cover";
 import { Hero } from "@/components/wedding/Hero";
 import { Dates } from "@/components/wedding/Dates";
@@ -31,7 +32,7 @@ function Index() {
     const a = audio.current;
     if (a && localStorage.getItem("music") !== "off") {
       a.volume = 0.6;
-      a.play().then(() => setPlaying(true)).catch(() => {});
+      a.play().then(() => setPlaying(true)).catch((e) => { setPlaying(false); console.error("Music playback failed", e); });
     }
     setTimeout(() => setCoverGone(true), 2600);
   };
@@ -39,7 +40,7 @@ function Index() {
     const a = audio.current;
     if (!a) return;
     if (a.paused) {
-      a.play().then(() => setPlaying(true)).catch(() => {});
+      a.play().then(() => setPlaying(true)).catch((e) => { setPlaying(false); console.error("Music playback failed", e); });
       localStorage.setItem("music", "on");
     } else {
       a.pause();
@@ -54,7 +55,18 @@ function Index() {
 
   return (
     <main className="relative">
-      <audio ref={audio} src={music.url} loop preload="auto" />
+      <audio
+        ref={audio}
+        src={music.url}
+        loop
+        preload="auto"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onError={() => {
+          setPlaying(false);
+          console.error(`Wedding song failed to load: ${music.url}`);
+        }}
+      />
       {!coverGone && <Cover onOpen={open} />}
       <Hero active={opened} />
       <Dates />

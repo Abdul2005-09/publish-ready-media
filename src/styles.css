@@ -124,12 +124,13 @@
 
 /* Opening hero typography — tuned for the warm bronze/gold video frames */
 @utility hero-name {
-  color: var(--hero-champagne);
+  color: #800020 !important;
+  -webkit-text-fill-color: #800020;
+  background: none;
   font-weight: 400;
   padding-inline: 0.15em;
-  text-shadow: 0 0 18px color-mix(in oklab, var(--hero-champagne) 35%, transparent),
-    0 2px 4px color-mix(in oklab, var(--hero-shadow) 85%, transparent),
-    0 4px 22px color-mix(in oklab, var(--hero-shadow) 70%, transparent);
+  text-shadow: 0 0 1px color-mix(in oklab, var(--hero-soft-ivory) 70%, transparent),
+    0 0 14px color-mix(in oklab, var(--hero-soft-ivory) 45%, transparent);
 }
 @utility hero-weds {
   color: var(--hero-ivory);
