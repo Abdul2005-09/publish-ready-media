@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import video from "@/assets/wedding-video.mp4.asset.json";
+import fallbackVideo from "@/assets/wedding-video.webm.asset.json";
 import poster from "@/assets/wedding-video-poster.jpg.asset.json";
 
 export function Hero({ active }: { active: boolean }) {
@@ -21,7 +22,6 @@ export function Hero({ active }: { active: boolean }) {
       <video
         ref={ref}
         className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
-        src={video.url}
         poster={poster.url}
         muted
         loop
@@ -30,7 +30,10 @@ export function Hero({ active }: { active: boolean }) {
         disablePictureInPicture
         controls={false}
         aria-hidden
-      />
+      >
+        <source src={video.url} type="video/mp4" />
+        <source src={fallbackVideo.url} type="video/webm" />
+      </video>
     </section>
   );
 }
