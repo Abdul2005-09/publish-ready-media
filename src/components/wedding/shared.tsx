@@ -60,7 +60,7 @@ export function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
       loading="lazy"
       width={1024}
       height={1024}
-      className={`pointer-events-none absolute w-36 opacity-90 sm:w-52 md:w-64 ${map[pos]}`}
+      className={`wedding-floral pointer-events-none absolute w-36 opacity-90 sm:w-52 md:w-64 ${map[pos]}`}
     />
   );
 }

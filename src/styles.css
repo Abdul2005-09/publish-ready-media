@@ -145,3 +145,36 @@
   color: var(--hero-soft-ivory);
   text-shadow: 0 1px 3px color-mix(in oklab, var(--hero-shadow) 70%, transparent), 0 2px 12px color-mix(in oklab, var(--hero-shadow) 45%, transparent);
 }
+
+/* Preserve desktop framing; phones show the complete uploaded video frame. */
+@media (width < 48rem) {
+  .wedding-video {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: var(--video-aspect, 16 / 9);
+    max-height: 100svh;
+    background: var(--ink);
+  }
+  .wedding-video video { object-fit: contain; }
+}
+
+@media (width < 40rem) {
+  main > section.parchment {
+    padding-top: 3rem;
+    padding-bottom: 4.5rem;
+  }
+  main > section.parchment:last-of-type { padding-bottom: 6rem; }
+  .wedding-floral { width: 5rem; }
+  main h2 { font-size: 2.5rem; }
+  main figure figcaption { overflow-wrap: anywhere; }
+  .wedding-gallery { height: 24rem; }
+  .wedding-gallery-photo { width: min(13rem, 65vw); }
+  .wedding-lightbox { max-width: 100%; }
+  .wedding-lightbox img { max-width: 100%; }
+  .wedding-music {
+    width: 2.75rem;
+    height: 2.75rem;
+    left: max(0.75rem, env(safe-area-inset-left));
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}

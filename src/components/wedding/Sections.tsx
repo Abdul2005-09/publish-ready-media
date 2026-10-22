@@ -123,11 +123,12 @@ export function Gallery() {
         <Ornament />
       </Reveal>
       <div
-        className="relative mx-auto mt-6 flex h-[440px] max-w-3xl items-center justify-center sm:h-[520px]"
-        onTouchStart={(e) => (startX.current = e.touches[0]!.clientX)}
+        className="wedding-gallery relative mx-auto mt-6 flex h-[440px] max-w-3xl items-center justify-center sm:h-[520px]"
+        onTouchStart={(e) => (startX.current = e.touches[0]?.clientX ?? null)}
         onTouchEnd={(e) => {
-          if (startX.current == null) return;
-          const dx = e.changedTouches[0]!.clientX - startX.current;
+          const touch = e.changedTouches[0];
+          if (startX.current == null || !touch) return;
+          const dx = touch.clientX - startX.current;
           if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
           startX.current = null;
         }}
@@ -142,7 +143,7 @@ export function Gallery() {
               aria-label={`Enlarge photo: ${p.caption}`}
               tabIndex={off === 0 ? 0 : -1}
               onClick={() => (off === 0 ? setZoom(idx) : go(off))}
-              className="absolute w-60 bg-ivory p-3 pb-10 shadow-paper transition-all duration-700 sm:w-72"
+              className="wedding-gallery-photo absolute w-60 bg-ivory p-3 pb-10 shadow-paper transition-all duration-700 sm:w-72"
               style={{
                 transform: `translateX(${off * 62}%) rotate(${off * 6}deg) scale(${off === 0 ? 1 : 0.82})`,
                 zIndex: off === 0 ? 3 : 1,
@@ -164,7 +165,7 @@ export function Gallery() {
       </div>
       {zoom !== null && (
         <div role="dialog" aria-modal className="fixed inset-0 z-50 flex items-center justify-center bg-ink/85 p-4" onClick={() => setZoom(null)}>
-          <figure className="max-h-full bg-ivory p-3 pb-6 shadow-paper">
+          <figure className="wedding-lightbox max-h-full bg-ivory p-3 pb-6 shadow-paper">
             <img src={photos[zoom]!.src} alt={photos[zoom]!.caption} className="max-h-[78svh] w-auto object-contain" />
             <figcaption className="mt-2 text-center font-script text-2xl text-primary">{photos[zoom]!.caption}</figcaption>
           </figure>
@@ -203,7 +204,7 @@ export function MusicToggle({ playing, onToggle }: { playing: boolean; onToggle:
       onClick={onToggle}
       aria-label={playing ? "Pause music" : "Play music"}
       aria-pressed={playing}
-      className="fixed bottom-4 left-4 z-40 grid h-12 w-12 place-items-center rounded-full border-2 border-gold bg-primary text-xl text-primary-foreground shadow-paper"
+      className="wedding-music fixed bottom-4 left-4 z-40 grid h-12 w-12 place-items-center rounded-full border-2 border-gold bg-primary text-xl text-primary-foreground shadow-paper"
     >
       <span className={playing ? "glow-pulse" : "opacity-60"}>{playing ? "♫" : "🔇"}</span>
     </button>
