@@ -196,17 +196,3 @@ export function Closing() {
     </section>
   );
 }
-
-export function MusicToggle({ playing, onToggle }: { playing: boolean; onToggle: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-label={playing ? "Pause music" : "Play music"}
-      aria-pressed={playing}
-      className="wedding-music fixed bottom-4 left-4 z-40 grid h-12 w-12 place-items-center rounded-full border-2 border-gold bg-primary text-xl text-primary-foreground shadow-paper"
-    >
-      <span className={playing ? "glow-pulse" : "opacity-60"}>{playing ? "♫" : "🔇"}</span>
-    </button>
-  );
-}
