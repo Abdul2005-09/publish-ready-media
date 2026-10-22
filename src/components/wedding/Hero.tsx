@@ -30,9 +30,15 @@ export function Hero({ active }: { active: boolean }) {
     };
   }, [active]);
   return (
-    <section className="relative isolate flex h-[88svh] min-h-[560px] items-center justify-center overflow-hidden md:h-screen">
+    <section className="wedding-video relative isolate flex h-[88svh] min-h-[560px] items-center justify-center overflow-hidden md:h-screen">
       <video
         ref={ref}
+        onLoadedMetadata={(e) => {
+          const v = e.currentTarget;
+          if (v.videoWidth && v.videoHeight) {
+            v.parentElement?.style.setProperty("--video-aspect", `${v.videoWidth} / ${v.videoHeight}`);
+          }
+        }}
         className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
         poster={poster.url}
         muted
