@@ -10,4 +10,5 @@
 <!-- LOVABLE:END -->
 
 - Store replacement uploaded video media as Lovable Assets pointers so the same media URLs work in preview and hosted deployments.
+- Vercel deployments must proxy `/__l5e/assets-v1/*` to this project's verified Lovable asset-serving origin through `vercel.json`; external hosts do not provide that media endpoint themselves.
 - Keep date-reveal completion in the invitation page, with Dates reporting completion, so the existing countdown is rendered once immediately after Dates.
