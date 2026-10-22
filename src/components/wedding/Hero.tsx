@@ -13,9 +13,21 @@ export function Hero({ active }: { active: boolean }) {
       return;
     }
     v.muted = true;
-    const io = new IntersectionObserver(([e]) => (e?.isIntersecting ? v.play().catch(() => {}) : v.pause()));
+    let visible = false;
+    const play = () => {
+      if (visible) v.play().catch(() => {});
+    };
+    v.addEventListener("canplay", play);
+    const io = new IntersectionObserver(([e]) => {
+      visible = Boolean(e?.isIntersecting);
+      if (visible) play();
+      else v.pause();
+    });
     io.observe(v);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      v.removeEventListener("canplay", play);
+    };
   }, [active]);
   return (
     <section className="relative isolate flex h-[88svh] min-h-[560px] items-center justify-center overflow-hidden md:h-screen">
