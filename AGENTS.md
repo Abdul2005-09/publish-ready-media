@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Store replacement uploaded video media as Lovable Assets pointers so the same media URLs work in preview and hosted deployments.
+- Keep date-reveal completion in the invitation page, with Dates reporting completion, so the existing countdown is rendered once immediately after Dates.

@@ -1,10 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Corner, Heading, Ornament, Reveal } from "./shared";
 
-function ScratchCard({ title, day, time }: { title: string; day: string; time: string }) {
+function ScratchCard({ title, day, time, onReveal }: { title: string; day: string; time: string; onReveal: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [done, setDone] = useState(false);
   const drawing = useRef(false);
+  const previous = useRef<{ x: number; y: number } | null>(null);
+  const reveal = () => {
+    if (done) return;
+    setDone(true);
+    onReveal();
+  };
 
   useEffect(() => {
     const c = canvasRef.current;
@@ -13,7 +19,8 @@ function ScratchCard({ title, day, time }: { title: string; day: string; time: s
     const dpr = window.devicePixelRatio || 1;
     c.width = rect.width * dpr;
     c.height = rect.height * dpr;
-    const ctx = c.getContext("2d")!;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
     ctx.scale(dpr, dpr);
     const g = ctx.createLinearGradient(0, 0, rect.width, rect.height);
     g.addColorStop(0, "#a8813a");
@@ -36,19 +43,32 @@ function ScratchCard({ title, day, time }: { title: string; day: string; time: s
     const c = canvasRef.current;
     if (!c || done) return;
     const r = c.getBoundingClientRect();
-    const ctx = c.getContext("2d")!;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
+    const point = { x: x - r.left, y: y - r.top };
     ctx.globalCompositeOperation = "destination-out";
+    ctx.lineWidth = 44;
+    ctx.lineCap = "round";
+    if (previous.current) {
+      ctx.beginPath();
+      ctx.moveTo(previous.current.x, previous.current.y);
+      ctx.lineTo(point.x, point.y);
+      ctx.stroke();
+    }
     ctx.beginPath();
-    ctx.arc(x - r.left, y - r.top, 22, 0, Math.PI * 2);
+    ctx.arc(point.x, point.y, 22, 0, Math.PI * 2);
     ctx.fill();
+    previous.current = point;
   };
   const check = () => {
     const c = canvasRef.current;
     if (!c || done) return;
-    const data = c.getContext("2d")!.getImageData(0, 0, c.width, c.height).data;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
+    const data = ctx.getImageData(0, 0, c.width, c.height).data;
     let clear = 0;
     for (let i = 3; i < data.length; i += 64) if (data[i] === 0) clear++;
-    if (clear / (data.length / 64) > 0.5) setDone(true);
+    if (clear / (data.length / 64) > 0.5) reveal();
   };
 
   return (
@@ -66,18 +86,28 @@ function ScratchCard({ title, day, time }: { title: string; day: string; time: s
         style={{ opacity: done ? 0 : 1, transition: "opacity .8s ease", pointerEvents: done ? "none" : "auto" }}
         onPointerDown={(e) => {
           drawing.current = true;
+          previous.current = null;
           e.currentTarget.setPointerCapture(e.pointerId);
           scratch(e.clientX, e.clientY);
         }}
-        onPointerMove={(e) => drawing.current && scratch(e.clientX, e.clientY)}
-        onPointerUp={() => {
-          drawing.current = false;
+        onPointerMove={(e) => {
+          if (!drawing.current) return;
+          scratch(e.clientX, e.clientY);
           check();
         }}
-        onPointerCancel={() => (drawing.current = false)}
+        onPointerUp={() => {
+          drawing.current = false;
+          previous.current = null;
+          check();
+        }}
+        onPointerCancel={() => {
+          drawing.current = false;
+          previous.current = null;
+          check();
+        }}
       />
       {!done && (
-        <button type="button" onClick={() => setDone(true)} className="sr-only focus:not-sr-only focus:absolute focus:bottom-2 focus:left-1/2 focus:-translate-x-1/2 focus:rounded focus:bg-primary focus:px-3 focus:py-1 focus:text-primary-foreground">
+        <button type="button" onClick={reveal} className="sr-only focus:not-sr-only focus:absolute focus:bottom-2 focus:left-1/2 focus:-translate-x-1/2 focus:rounded focus:bg-primary focus:px-3 focus:py-1 focus:text-primary-foreground">
           Reveal {title} date
         </button>
       )}
@@ -85,9 +115,16 @@ function ScratchCard({ title, day, time }: { title: string; day: string; time: s
   );
 }
 
-export function Dates() {
-  const [key, setKey] = useState(0);
+export function Dates({ onRevealed }: { onRevealed?: () => void }) {
   const [all, setAll] = useState(false);
+  const revealed = useRef(new Set<string>());
+  const revealDate = (name: string) => {
+    revealed.current.add(name);
+    if (revealed.current.size === 2) {
+      setAll(true);
+      onRevealed?.();
+    }
+  };
   return (
     <section className="parchment relative overflow-hidden px-5 py-20">
       <Corner pos="tl" />
@@ -105,14 +142,14 @@ export function Dates() {
           </>
         ) : (
           <>
-            <ScratchCard key={`r${key}`} title="Reception" day="Saturday, 21 November 2026" time="6:00 PM onwards" />
-            <ScratchCard key={`m${key}`} title="Muhurtham" day="Sunday, 22 November 2026" time="10:00 AM – 11:50 AM" />
+            <ScratchCard title="Reception" day="Saturday, 21 November 2026" time="6:00 PM onwards" onReveal={() => revealDate("reception")} />
+            <ScratchCard title="Muhurtham" day="Sunday, 22 November 2026" time="10:00 AM – 11:50 AM" onReveal={() => revealDate("muhurtham")} />
           </>
         )}
       </Reveal>
       {!all && (
         <div className="relative mt-8 text-center">
-          <button type="button" onClick={() => { setAll(true); setKey(key + 1); }} className="rounded-full bg-primary px-6 py-2.5 font-display text-sm tracking-widest text-primary-foreground shadow-paper transition hover:opacity-90">
+          <button type="button" onClick={() => { setAll(true); onRevealed?.(); }} className="rounded-full bg-primary px-6 py-2.5 font-display text-sm tracking-widest text-primary-foreground shadow-paper transition hover:opacity-90">
             Reveal Dates
           </button>
         </div>
