@@ -12,6 +12,7 @@
 # Phone layout refinements
 - [x] Display the existing landscape video without phone cropping; preserve desktop framing.
 - [x] Reduce phone decoration, text, gallery, and music-button overlap without redesigning sections.
-- [ ] Check cover, playback, scratch dates, gallery, and overflow at 360, 390, 430, and desktop widths.
-- [ ] Verify live Vercel playback and report whether phone layout updates are deployed.
+- [x] Check cover, playback, scratch dates, gallery, and overflow at 360, 390, 430, and desktop widths.
+- [x] Verify real live Vercel playback on desktop and mobile without interception.
+- [ ] Deploy and verify the new phone layout on Vercel (requires the updated Vercel deployment).
 - [ ] Replace the video only when the user supplies the new high-quality file (not attached yet).
