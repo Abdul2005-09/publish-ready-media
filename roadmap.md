@@ -16,3 +16,6 @@
 - [x] Verify real live Vercel playback on desktop and mobile without interception.
 - [ ] Deploy and verify the new phone layout on Vercel (requires the updated Vercel deployment).
 - [ ] Replace the video only when the user supplies the new high-quality file (not attached yet).
+
+# Song removal
+- [x] Remove the background song, its audio element, and the floating music button; keep every other section.
