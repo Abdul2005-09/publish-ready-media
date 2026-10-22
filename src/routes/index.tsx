@@ -25,6 +25,7 @@ function Index() {
   const [opened, setOpened] = useState(false);
   const [coverGone, setCoverGone] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [datesRevealed, setDatesRevealed] = useState(false);
   const audio = useRef<HTMLAudioElement>(null);
 
   const open = () => {
@@ -69,10 +70,10 @@ function Index() {
       />
       {!coverGone && <Cover onOpen={open} />}
       <Hero active={opened} />
-      <Dates />
+      <Dates onRevealed={() => setDatesRevealed(true)} />
+      {datesRevealed && <Countdown />}
       <Story />
       <Venue />
-      <Countdown />
       <Gallery />
       <Closing />
       {opened && <MusicToggle playing={playing} onToggle={toggle} />}
